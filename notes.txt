@@ -1,0 +1,57 @@
+Step 1: Install various packages necessary
+    - express
+    - body-parser
+    - dotenv
+    - jsonwebtoken
+    - mongoose
+    - bcrypt
+    - nodemon
+    - concurrently
+Step 2: Create FrontEnd/Client folder to install vite (React)
+Step 3: Start the server in server.js file
+    - express, app, create port 
+Step 4: Update scripts in package.json to run dev 
+    - run server using nodemon
+    - run client using --prefix FrontEnd
+    - run dev using concurrently to join 2 script commands
+Step 5: Update vite.config.js to have an appropriate proxy server location to localhost:3001
+    - direct '/api' to 'http://localhost:3001'
+Step 6: Create a cluster on MongoDB to connect to.
+    - Create a new project and cluster --> name accordingly
+    - copy connection info and password
+Step 7: Incorporate dotenv package to help mask user, password, and host name on local machine so sharing on GitHub/online is not risky
+    - npm i dotenv
+    - create .env file and create variables for Host, User, and password
+    - Store info from MongoDB and password in .env file and replace in template string in server.js where appropriate
+    - This will mask the actual values of these variables in the .env file so uploading online is not risky
+    - connect to mongoURI
+Step 8: Create user schema in Models folder in server
+    - Create user model with various attributes for a particular user
+    - export the user schema 
+    - use validator package to check if email address is actually an email address
+Step 9: Create Routes for each path (articles, users, authentication)
+    - Create an Index file with express.Router function
+    - create individual files with specific routes to reference in array of objects on index.js
+    - ensure that routes folder is required in server.js file and in app.use()
+Step 10: Create controllers and services
+    - Routes call on Controllers which are a collection of functions that call on services
+    - Service files contain all the logic for what the Controller functions dotenv
+    - Routes <-- Controllers <-- Services
+Step 11: Create methods in the user model that is called within the service.
+    - For auth.service, the emailTaken method is stored in the user model and checks to see if a user email is found via findOne method
+    - This is then called in the controller and subsequently in the route
+Step 12: Create methods within User Schema to call in services and then controller
+    - Create the validation methods in User Schema to use in services
+    - Call service functions in controller 
+    - Inside the controller, send user, token, and cookie back
+    - Test Sign In and Register functions using Postman and appropriate routes
+Step 13: Create ApiError object to standardize ApiError and ensure that all errors thrown are json objects with same content structure
+    - create middleware file apiError and new class ApiError
+    - create method handleError to take new ApiError instances and put json output in response
+    - create method ConvertToApiError to convert mongoose error in different format to ApiError for error response standardization
+    - at this point, error outputs in postman should be json objects with similar formats
+Step 14: Create auth middleware to check to see if a user is authorized
+    - leveraging the token generated earlier, we can create a middleware 'auth' that takes that information and determines if a user is authorized
+    - by using the passport module, we can decode the jwt for a user using strategies and return a valid user or an error
+    - then using that response in the 'auth' middleware, we create a new promise to authenticate the user using a self-defined verify function
+    - finally, adding that middleware to auth route will allow that middleware to "guard" the route and prevent bad tokens from accessing the endpoint of the route
